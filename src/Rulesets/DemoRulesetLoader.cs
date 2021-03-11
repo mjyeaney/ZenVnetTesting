@@ -38,6 +38,7 @@ namespace ZenTest.Rulesets
             // Create some rules
             List<AclRule> rules = new List<AclRule>();
 
+            // Allow VNET traffic
             AclRule vnetTraffic = new AclRule();
             vnetTraffic.Priority = 100;
             vnetTraffic.Permit = true;
@@ -47,9 +48,10 @@ namespace ZenTest.Rulesets
             vnetTraffic.SrcIpHigh = IPAddressUtilities.StringToUint("10.0.1.255");
             rules.Add(vnetTraffic);
 
+            // Allow other VNET to talk to us ONLY on port 22 (ssh)
             AclRule otherVnetInbound = new AclRule();
             otherVnetInbound.Priority = 200;
-            otherVnetInbound.Permit = true;
+            otherVnetInbound.Permit = false;
             otherVnetInbound.DstIpLow = IPAddressUtilities.StringToUint("10.0.1.0");
             otherVnetInbound.DstIpHigh = IPAddressUtilities.StringToUint("10.0.1.255");
             otherVnetInbound.DstPort = 22;
@@ -57,15 +59,17 @@ namespace ZenTest.Rulesets
             otherVnetInbound.SrcIpHigh = IPAddressUtilities.StringToUint("192.168.1.10");
             rules.Add(otherVnetInbound);
 
+            // Can we reach Google DNS?
             AclRule googleTest = new AclRule();
             googleTest.Priority = 300;
             googleTest.Permit = false;
-            googleTest.DstIpLow = IPAddressUtilities.StringToUint("10.0.1.0");
-            googleTest.DstIpHigh = IPAddressUtilities.StringToUint("10.0.1.255");
-            googleTest.SrcIpLow = IPAddressUtilities.StringToUint("8.8.8.8");;
-            googleTest.SrcIpHigh = IPAddressUtilities.StringToUint("8.8.8.8");
+            googleTest.SrcIpLow = IPAddressUtilities.StringToUint("10.0.1.0");
+            googleTest.SrcIpHigh = IPAddressUtilities.StringToUint("10.0.1.255");
+            googleTest.DstIpLow = IPAddressUtilities.StringToUint("8.8.8.8");;
+            googleTest.DstIpHigh = IPAddressUtilities.StringToUint("8.8.8.8");
             rules.Add(googleTest);
 
+            // Block all inbound internet traffic
             AclRule internetInbound = new AclRule();
             internetInbound.Priority = 65000;
             internetInbound.Permit = false;

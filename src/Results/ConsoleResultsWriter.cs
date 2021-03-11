@@ -25,10 +25,11 @@ namespace ZenTest.Results
         }
 
         /// <summary>
-        /// Writes the solver results to the console.
+        /// Writes solver results to an output format.
         /// </summary>
-        /// <param name="solutions">The list of solutions found by the solver.</param>
-        public Task WriteResults(IEnumerable<Packet> solutions)
+        /// <param name="strategyName">The name of the strategy used.</param>
+        /// <param name="solutions">The solver results to write.</param>
+        public Task WriteResults(string strategyName, IEnumerable<Packet> solutions)
         {
             _logger.Write("Writing solution results");
 
@@ -41,13 +42,13 @@ namespace ZenTest.Results
             if (!solutions.Any())
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("No solutions found!\n");
+                Console.WriteLine($"No solutions found for the \"{strategyName}\" strategy.\n");
                 Console.ResetColor();
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"The following solutions satisfy the model constraints:");
+                Console.WriteLine($"The following solutions satisfy the \"{strategyName}\" strategy constraints:");
                 Console.WriteLine($"(displaying a maximum of {_config.MaxReportedResults} results)");
                 Console.WriteLine();
                 Console.ResetColor();

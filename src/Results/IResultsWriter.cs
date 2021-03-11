@@ -11,7 +11,8 @@ namespace ZenTest.Results
         /// <summary>
         /// Writes solver results to an output format.
         /// </summary>
+        /// <param name="strategyName">The name of the strategy used.</param>
         /// <param name="solutions">The solver results to write.</param>
-        Task WriteResults(IEnumerable<Packet> solutions);
+        Task WriteResults(string strategyName, IEnumerable<Packet> solutions);
     }
 }

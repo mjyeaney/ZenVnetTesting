@@ -35,7 +35,7 @@ namespace ZenTest
             IEnumerable<Packet> solutions = await solver.FindSolutions(ruleset, invariant);
 
             // Print results
-            await writer.WriteResults(solutions);
+            await writer.WriteResults(invariant.Name, solutions);
         }
     }
 }
