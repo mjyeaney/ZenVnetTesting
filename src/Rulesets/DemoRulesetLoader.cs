@@ -51,7 +51,7 @@ namespace ZenTest.Rulesets
             // Allow other VNET to talk to us ONLY on port 22 (ssh)
             AclRule otherVnetInbound = new AclRule();
             otherVnetInbound.Priority = 200;
-            otherVnetInbound.Permit = false;
+            otherVnetInbound.Permit = true;
             otherVnetInbound.DstIpLow = IPAddressUtilities.StringToUint("10.0.1.0");
             otherVnetInbound.DstIpHigh = IPAddressUtilities.StringToUint("10.0.1.255");
             otherVnetInbound.DstPort = 22;
@@ -59,15 +59,27 @@ namespace ZenTest.Rulesets
             otherVnetInbound.SrcIpHigh = IPAddressUtilities.StringToUint("192.168.1.10");
             rules.Add(otherVnetInbound);
 
-            // Can we reach Google DNS?
+            // Can we reach Google DNS? (OUTBOUND)
             AclRule googleTest = new AclRule();
             googleTest.Priority = 300;
-            googleTest.Permit = false;
+            googleTest.Permit = true;
             googleTest.SrcIpLow = IPAddressUtilities.StringToUint("10.0.1.0");
             googleTest.SrcIpHigh = IPAddressUtilities.StringToUint("10.0.1.255");
             googleTest.DstIpLow = IPAddressUtilities.StringToUint("8.8.8.8");;
             googleTest.DstIpHigh = IPAddressUtilities.StringToUint("8.8.8.8");
+            googleTest.DstPort = 53;
             rules.Add(googleTest);
+
+            // Can an Azure service reach us? (INBOUND)
+            AclRule azureSvcTest = new AclRule();
+            azureSvcTest.Priority = 400;
+            azureSvcTest.Permit = true;
+            azureSvcTest.SrcIpLow = IPAddressUtilities.StringToUint("20.60.134.228");
+            azureSvcTest.SrcIpHigh = IPAddressUtilities.StringToUint("20.60.134.228");
+            azureSvcTest.DstIpLow = IPAddressUtilities.StringToUint("10.0.1.4");;
+            azureSvcTest.DstIpHigh = IPAddressUtilities.StringToUint("10.0.1.8");
+            azureSvcTest.DstPort = 443;
+            rules.Add(azureSvcTest);
 
             // Block all inbound internet traffic
             AclRule internetInbound = new AclRule();

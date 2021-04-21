@@ -23,7 +23,7 @@ namespace ZenTest
             ILogWriter logger = new ConsoleLogWriter();
             IConfiguration config = new ConfigurationSettings();
             IRulesetLoader loader = new DemoRulesetLoader(config, logger);
-            //IRulesetLoader loader = new AzureRulesetLoader(config, logger);
+            // IRulesetLoader azureLoader = new AzureRulesetLoader(); // Or other ruleset loader
             IVnetSolver solver = new ZenVnetSolver(config, logger);
             IResultsWriter writer = new ConsoleResultsWriter(config, logger);
 

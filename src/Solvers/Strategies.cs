@@ -22,7 +22,7 @@ namespace ZenTest.Solvers
                 {
                     Zen<uint> srcIp = packet.GetSrcIp();
                     return And(
-                        Or(
+                        Or( // Looking for packets _not_ coming from the VNET ..
                             And(
                                 srcIp >= IPAddressUtilities.StringToUint("1.0.0.1"),
                                 srcIp < IPAddressUtilities.StringToUint("10.0.1.0")
@@ -31,8 +31,8 @@ namespace ZenTest.Solvers
                                 srcIp > IPAddressUtilities.StringToUint("10.0.1.255"),
                                 srcIp <= IPAddressUtilities.StringToUint("223.255.255.255")
                             )
-                        ), // Looking for packets _not_ coming from the VNET ..
-                        result == true // ..that are allowed
+                        ), 
+                        result == true // ..that are allowed by ACL policy
                     );
                 };
             return inboundAllowed;
