@@ -23,7 +23,8 @@ typically fall within the following solution types:
   
   Example: _Find all addresses/ports that violate a business rule_
 
-Each of these approaches has distinct advantages and challenges. Following the outline above, we could enumerate these:
+Each of these approaches has distinct advantages and challenges. Following the outline 
+above, we could enumerate these:
 
 - **Resource Verification**
   
@@ -49,7 +50,8 @@ Each of these approaches has distinct advantages and challenges. Following the o
 
   Disadvantages: Can be computationally expensive (IP x Ports x nodes); May require installation of testing utilities; May falsely trigger IDS/etc. systems
 
-While the first 3 options have relatively known solutions, the goal here is to explore reducing the computational complexity of the last option ("Exploratory testing") to provide 
+While the first 3 options have relatively known solutions, the goal here is to explore reducing the 
+computational complexity of the last option ("Exploratory testing") to provide 
 more rapid validation that no unknown beahviors are present.
 
 ### Overview
@@ -62,7 +64,8 @@ following type of expressiong could be formulated:
 
 > In this expression, P(x) represents an overall policy resule, with r(x) denoting a single rule within that policy.
 
-Alternatively, we could also evaluate against a "first matches" type approch, in which we would have an approach like this following:
+Alternatively, we could also evaluate against a "first matches" type approch, in which we would 
+have an approach like this following:
 
 ![First Matches Predicate](docs/first-matches.png)
 
@@ -81,7 +84,9 @@ Under the `src/Rulesets` folder, there is a `DemoRulesetLoader` which sets up th
 - Traffic _from_ a single outside IP is enabled to a few IPs on port 443
 - All other _inbound_  internet (outside) traffic is blocked.
 
-To help validate, we setup a predicate expression in Z3/Zen looking for all packets that are coming from sources that are _outside_ the 10.0.1.0/24 network space. This rule looks like the following (from `src/Solvers/Strategies.cs`):
+To help validate, we setup a predicate expression in Z3/Zen looking for all packets that are coming 
+from sources that are _outside_ the 10.0.1.0/24 network space. This rule looks like the 
+following (from `src/Solvers/Strategies.cs`):
 
 ```c#
             inboundAllowed.Invariant = (packet, result) =>
@@ -119,7 +124,9 @@ We also are leveraging the "First Matches" approach discussed above, and have en
         }
 ```
 
-Running the program in this configuration will spit out identified packet flows (up to 25 currently) that satisfy the above constraints (sample results below). By toggling the "Permit" flags against the demo set you can test how these individual rules impact these flows:
+Running the program in this configuration will spit out identified packet flows (up to 25 currently) 
+that satisfy the above constraints (sample results below). By toggling the "Permit" flags 
+against the demo set you can test how these individual rules impact these flows:
 
 ```bash
 **********************************
@@ -169,9 +176,25 @@ Source: 192.168.1.10:*          Destination: 10.0.1.7:22
 2021-04-21T09:59:11.2413585-04:00 - INFO: Completed writing solution results
 ```
 
+### Prior Work
 
+There are many applications of Z3 for network verification, including on 
+the Azure platform itself (see References). This example builds on these concepts 
+in an effort to provide another concept that could be used to help validate network infrastructure.
+
+### Future Work
+
+While this is only a quick demonstration, it is lacking several features which could be used
+to properly validate existing network infrastructure. These are (in no particular order):
+
+- Building a correct graph of network connected device in order to property combine and order ACL's
+- Handling network address translation that may give false results due to packets matching/not-matching.
+- Additional parser (`IRulesetLoader`) implementations to digest existing network configurations.
+- Testing build out
 
 ### References:
 
-- "SecGuru: Automated Analysis and Debugging of Network
-Connectivity Policies", https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/secguru.pdf
+- "SecGuru: Automated Analysis and Debugging of Network Connectivity Policies", https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/secguru.pdf
+- "Automated Analysis and Debugging of Network Connectivity Policies", https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/secguru.pdf
+- "Checking Cloud Contracts in Microsoft Azure", https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/nbjorner-icdcit2015.pdf
+- "Checking Firewall Equivalence with Z3", ​https://ahelwer.ca/post/2018-02-13-z3-firewall/
