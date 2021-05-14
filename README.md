@@ -5,55 +5,6 @@ network security conditions. Specifically, we will be using the Z3 solver from
 Microsoft Research to evaluate a set of access control lists (on Azure, Network 
 Security Groups).
 
-### Background
-
-When verifying correct network infrastructure configuration and behavior, approaches 
-typically fall within the following solution types:
-
-- **Resource Verification**
-  
-  Example: _Is the device configured the way is should be?_
-- **Explicit flow testing (positive cases)**
-  
-  Example: _Can a packet flow from point A to point B?_
-- **Explicit flow testing (negative cases)**
-  
-  Example: _Are packets blocked from flowing from point B to point C?_
-- **Exploratory testing**
-  
-  Example: _Find all addresses/ports that violate a business rule_
-
-Each of these approaches has distinct advantages and challenges. Following the outline 
-above, we could enumerate these:
-
-- **Resource Verification**
-  
-  Advantages: Relatively easy to check; Doesn’t require software installation / etc. Leverage Azure management plane API.
-
-  Disadvantages: Only checks that configuration is present; doesn’t verify behavior.
-
-- **Explicit flow testing (positive cases)**
-  
-  Advantages: Concrete answers that match behavioral specifications (e.g., VM-A can talk to VM-B). Leverage agents / Network Watcher API / etc.
-
-  Disadvantages: May require installation of testing utilities (compromising validation/etc)
-  
-- **Explicit flow testing (negative cases)**
-  
-  Advantages: Concrete answers that match behavioral specifications (e.g., VM-A can talk to VM-B). Leverage agents / Network Watcher API / etc.
-
-  Disadvantages: Typically harder to derive; can take longer to maintain and update.  May require installation of testing utilities (compromising validation/etc)
-
-- **Exploratory testing**
-  
-  Advantages: Uncovers "What you don’t know"/unknowns that can lead to security issues.
-
-  Disadvantages: Can be computationally expensive (IP x Ports x nodes); May require installation of testing utilities; May falsely trigger IDS/etc. systems
-
-While the first 3 options have relatively known solutions, the goal here is to explore reducing the 
-computational complexity of the last option ("Exploratory testing") to provide 
-more rapid validation that no unknown beahviors are present.
-
 ### Overview
 
 This solution is based around formulating a desired invariant as a boolean function 
